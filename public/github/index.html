@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>MDN BCD Editor</title>
+
+  <link href="style.css" rel="stylesheet" type="text/css">
+  <script src="octokit-rest.min.js"></script>
+  <script src="git-scripts.js"></script>
+</head>
+
+<body>
+  <button name="auth">GIT ME A TOKEN!</button>
+  <button name="pr">GIT MY PR PREPPED!</button>
+
+  <script>
+    document.querySelector('button[name="auth"]').addEventListener('click', (e) => GitScripts.authenticate())
+
+    document.querySelector('button[name="pr"]').addEventListener('click', (e) => {
+      GitScripts.compare('api/ImageData.json', 'foo\n')
+    })
+  </script>
+</body>
+</html>
