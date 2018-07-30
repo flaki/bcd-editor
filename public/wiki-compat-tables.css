@@ -1,3 +1,23 @@
+main.bc-data {
+  padding: .25em;
+}
+
+table.bc-table {
+  background: #e9eef1;
+  margin: 0 0 1em;
+}
+
+.bc-data a {
+  color: #3f87a6;
+}
+
+.bc-data a:not(:hover) {
+  text-decoration: none;
+}
+
+
+
+/* extracted from developer.mozilla.org */
 .bc-table,.bc-table .bc-history,.bc-table tbody,.bc-table td,.bc-table th,.bc-table thead,.bc-table tr {
  box-sizing:border-box
 }

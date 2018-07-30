@@ -10,8 +10,8 @@
 </head>
 
 <body>
-  <button name="auth">GIT ME A TOKEN!</button>
-  <button name="pr">GIT MY PR PREPPED!</button>
+  <button name="auth">Allow GitHub Access...</button>
+  <button name="pr" style="visibility:hidden">Prepare pull request</button>
 
   <script>
     document.querySelector('button[name="auth"]').addEventListener('click', (e) => GitScripts.authenticate())

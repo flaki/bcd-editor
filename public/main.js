@@ -1,4 +1,4 @@
-/* global Octokit, rfc6902, GitScripts */
+/* global Octokit, rfc6902, GitScripts, JSONEditor */
 
 // replace with
 // <input class="value" data-value="api.HTMLCanvasElement.__compat.support.chrome.version_added" value="4" style="width: 2em;background: transparent;border: none;text-align: center;" data-com.agilebits.onepassword.user-edited="yes" type="text">
@@ -9,7 +9,7 @@ fetch('browser-compat.data.json').then(r => r.json()).then(r => window.browser_c
   let list = (function pathgen(key, data) {
     const keys = typeof data==='object' && Object.keys(data)
     return [ key, !keys || '__compat' in data || 'releases' in data ? [] : keys.map(k => pathgen(k, data[k])) ]
-  })('', browser_compat_data)[1]
+  })('', window.browser_compat_data)[1]
 
   let jsonlist = list.reduce( (a,b) => {
     if (b) return (function rec(a,b0,b1) {
@@ -68,6 +68,7 @@ fetch('browser-compat.data.json').then(r => r.json()).then(r => window.browser_c
       GitScripts.compare(data.file, data.contents)
     })
   })
+  
 
   // initial
   let path = document.querySelector('header>input').value||'api.HTMLCanvasElement';
@@ -89,7 +90,19 @@ fetch('browser-compat.data.json').then(r => r.json()).then(r => window.browser_c
     window.$highlightedNode = node;
   })
 
+  // GitHub login status handling
+  document.addEventListener('visibilitychange', updateGitHubLoginStatus, false);
+  updateGitHubLoginStatus()
 })
+
+
+
+function updateGitHubLoginStatus(e) {
+  const loggedin = document.querySelector('.logged-in-as')
+  const username = window.localStorage.getItem('github-auth-user')
+  console.log(loggedin,username)
+  if (loggedin && username) loggedin.textContent = ` (logged in as: ${username})`
+}
 
 function editCompat(path) {
   window.$path = path;

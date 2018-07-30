@@ -3,16 +3,23 @@
 var GitScripts = (function(){
   const repo = 'browser-compat-data'
   const repo_owner = 'mdn'
-  const user = 'flaki'
 
   let authResponse
 
   // Back-direct from GitHub Auth
   if (window.opener && ( authResponse=window.location.search.match(/code=(\w+)/) )) {
     const code = authResponse[1]
-    fetch(`/authenticate/${code}`).then(res => res.json()).then(res => {
-      window.localStorage.setItem('github-auth-token', res.token)
-      window.close()
+    fetch(`/authenticate/${code}`).then(res => res.json()).then(oauth => {
+      window.localStorage.setItem('github-auth-token', oauth.token)
+      //console.log('OAuth token:', oauth)
+  
+      const octokit = new Octokit()
+      octokit.authenticate({ type: 'token', token: oauth.token })
+      octokit.users.get({}).then(github => {
+        window.localStorage.setItem('github-auth-user', github.data.login)
+        //console.log('Authenticated user:', github.data.login)
+        window.close()
+      }).catch(err => console.error(err))
     })
   }
 
@@ -27,7 +34,9 @@ var GitScripts = (function(){
 
   async function compare(path, contents) {
     const token = authenticated()
-    if (!token) throw new Error('Not authenticated!')
+    const user = window.localStorage.getItem('github-auth-user')
+
+    if (!token || !user) throw new Error('Not authenticated!')
 
     const octokit = new Octokit()
 
